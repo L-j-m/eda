@@ -1,0 +1,41 @@
+---
+title: "eda_plot2"
+author: "Jiaming Li"
+date: "2022-11-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+downloadURL <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+downloadFile <- "household_power_consumption.zip"
+householdFile <- "household_power_consumption.txt"
+##
+if (!file.exists(householdFile)) {
+  download.file(downloadURL, downloadFile, method = "curl")
+  unzip(downloadFile, overwrite = T)
+}
+##
+plotData <- read.table(householdFile, header=T, sep=";", na.strings="?")
+## set time variable
+finalData <- plotData[plotData$Date %in% c("1/2/2007","2/2/2007"),]
+SetTime <-strptime(paste(finalData$Date, finalData$Time, sep=" "),"%d/%m/%Y %H:%M:%S")
+finalData <- cbind(SetTime, finalData)
+```
+
+plot 2
+```{r}
+# current working directory
+wd <- "~/Library/Mobile Documents/com~apple~CloudDocs/Coursera"
+setwd(wd)
+
+png("plot2.png", width = 480, height = 480)
+plot(finalData$SetTime, finalData$Global_active_power, type="l", col="black", xlab="", ylab="Global Active Power (kilowatts)")
+dev.off()
+```
+
+
+
